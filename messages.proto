@@ -1,0 +1,43 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+
+message CreateUser {
+    string user = 1;
+    string pass = 2;
+    string mobilePhoneNumber = 3;
+    string email = 4;
+}
+
+message CreateUserResponse {
+    enum Result {
+        Created = 0;
+        AlreadyExists = 1;
+        Failed = 2;
+    }
+    Result result = 1;
+    // auth token?
+
+}
+
+message Person {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+
+  enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+
+  message PhoneNumber {
+    string number = 1;
+    PhoneType type = 2;
+  }
+
+  repeated PhoneNumber phones = 4;
+}
+
+message AddressBook {
+  repeated Person people = 1;
+}
