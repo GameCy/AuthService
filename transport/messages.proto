@@ -1,6 +1,17 @@
 syntax = "proto3";
 option optimize_for = LITE_RUNTIME;
 
+enum PacketType {
+    CreateUser = 0;
+
+}
+
+message PacketHeader {
+    sfixed32 size = 1;
+    sfixed32 requestId = 2;
+    sfixed32 packetType = 2;
+}
+
 message CreateUser {
     string user = 1;
     string pass = 2;

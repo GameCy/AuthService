@@ -1,11 +1,11 @@
 #include <QCoreApplication>
 #include "messages.pb.h"
+#include "qsslserver.h"
+#include <QObject>
 #include <QDebug>
 
-int main(int argc, char *argv[])
+void testProtoSerialization()
 {
-    QCoreApplication a(argc, argv);
-
     qDebug() << "fill personOut fields";
     Person personOut;
     personOut.set_id(123456);
@@ -30,6 +30,34 @@ int main(int argc, char *argv[])
 
     qDebug() << "completed test";
     free(buffer);
+}
 
-    return a.exec();
+int main(int argc, char *argv[])
+{
+    QCoreApplication app(argc, argv);
+
+    //testProtoSerialization();
+
+
+    auto server = new QSslServer(&app);
+    //emits newConnection just like the tcp variant
+    QObject::connect( server, &QSslServer::newConnection
+             , [server]()
+    {
+        while(server->hasPendingConnections())
+        {
+            auto socket = server->nextPendingConnection();
+            //work with the new socket
+            qDebug() << "new connection";
+        }
+    } );
+
+    //load a certificate and private key, then start listening
+    QString certificatePath = QStringLiteral("certs/server.p12");
+    if(!server->importPkcs12(certificatePath))
+        qCritical() << "Failed to import certificates";
+    else
+        server->listen(QHostAddress::Any, 4711);
+
+    return app.exec();
 }

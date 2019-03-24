@@ -10,21 +10,33 @@ CONFIG -= app_bundle
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-include($$PWD/../protobuf/src/QtProtobufLite.pri)
+include($$PWD/../transport/transport.pri)
+INCLUDEPATH += $$PWD/../transport
 
 SOURCES += \
         main.cpp \
-    messages.pb.cc \
     qsslserver.cpp
+
+HEADERS += \
+    qsslserver.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-HEADERS += \
-    messages.pb.h \
-    qsslserver.h
+certificates.files = $$PWD/../certs/*.*
+certificates.path = $$OUT_PWD
+INSTALLS += certificates
+
+# Copy certificates in executable folder
+copydata.commands = $(COPY_DIR) $$PWD/../certs/server.p12 $$OUT_PWD/certs
+first.depends = $(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
+
 
 DISTFILES += \
     messages.proto
+
