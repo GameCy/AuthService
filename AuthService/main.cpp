@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     if(!server->importPkcs12(certificatePath))
         qCritical() << "Failed to import certificates";
     else
-        server->listen(QHostAddress::Any, 4711);
+        server->listen(QHostAddress::Any, 4749);
 
     return app.exec();
 }

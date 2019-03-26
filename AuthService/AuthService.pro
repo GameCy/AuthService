@@ -30,7 +30,7 @@ certificates.path = $$OUT_PWD
 INSTALLS += certificates
 
 # Copy certificates in executable folder
-copydata.commands = $(COPY_DIR) $$PWD/../certs/server.p12 $$OUT_PWD/certs
+copydata.commands = $(COPY_DIR) $$PWD/../certs $$OUT_PWD
 first.depends = $(first) copydata
 export(first.depends)
 export(copydata.commands)
