@@ -15,10 +15,12 @@ INCLUDEPATH += $$PWD/../transport
 
 SOURCES += \
         main.cpp \
-    qsslserver.cpp
+    qsslserver.cpp \
+    ServerConnection.cpp
 
 HEADERS += \
-    qsslserver.h
+    qsslserver.h \
+    ServerConnection.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

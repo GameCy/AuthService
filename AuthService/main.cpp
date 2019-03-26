@@ -3,6 +3,7 @@
 #include "qsslserver.h"
 #include <QObject>
 #include <QDebug>
+#include <ServerConnection.h>
 
 void testProtoSerialization()
 {
@@ -47,6 +48,8 @@ int main(int argc, char *argv[])
         while(server->hasPendingConnections())
         {
             auto socket = server->nextPendingConnection();
+            auto connection = new ServerConnection(socket);
+            socket->startServerEncryption();
             //work with the new socket
             qDebug() << "new connection";
         }
@@ -57,7 +60,10 @@ int main(int argc, char *argv[])
     if(!server->importPkcs12(certificatePath))
         qCritical() << "Failed to import certificates";
     else
+    {
+        qDebug() << "Listening for incomming connections.";
         server->listen(QHostAddress::Any, 4749);
+    }
 
     return app.exec();
 }

@@ -12,7 +12,7 @@ ClientConnection::ClientConnection()
 
 void ClientConnection::TryConnect(QString host, quint16 port)
 {
-    socket->connectToHost(host, port);
+    socket->connectToHostEncrypted(host, port);
 }
 
 void ClientConnection::onEncrypted()
