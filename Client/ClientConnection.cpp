@@ -4,24 +4,33 @@
 ClientConnection::ClientConnection()
     : socket(nullptr)
 {
-    socket = new QSslSocket();
-    connect(socket, &QSslSocket::encrypted, this, &ClientConnection::onEncrypted);
-    connect(socket, QOverload<const QList<QSslError> &>::of(&QSslSocket::sslErrors)
-            , this, &ClientConnection::onSslErrors);
+    socket = new QTcpSocket();
+    connect(socket, &QTcpSocket::connected, this, &ClientConnection::onConnected);
+    connect(socket, &QTcpSocket::readyRead, this, &ClientConnection::onReadyRead);
+    connect(socket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error)
+            , this, &ClientConnection::onError);
 }
 
 void ClientConnection::TryConnect(QString host, quint16 port)
 {
-    socket->connectToHostEncrypted(host, port);
+    socket->connectToHost(host, port);
 }
 
-void ClientConnection::onEncrypted()
+void ClientConnection::onConnected()
 {
-    qDebug() << "encrypting on, ready to transmit";
+    qDebug() << "ready to transmit";
+
 }
 
-void ClientConnection::onSslErrors(const QList<QSslError> &errors)
+void ClientConnection::onReadyRead()
 {
-    qDebug() << "Ssl errors: " << errors;
+    qDebug() << "received " << socket->bytesAvailable() << " bytes";
+    auto bytes = socket->readAll();
+    qDebug() << "Data: " << bytes;
+}
+
+void ClientConnection::onError(QAbstractSocket::SocketError error)
+{
+    qDebug() << "onError: " << error;
 
 }

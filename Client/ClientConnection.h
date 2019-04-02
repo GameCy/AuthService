@@ -1,7 +1,7 @@
 #ifndef CLIENTCONNECTION_H
 #define CLIENTCONNECTION_H
 #include <QObject>
-#include <QtNetwork/QSslSocket>
+#include <QtNetwork/QTcpSocket>
 
 class ClientConnection : public QObject
 {
@@ -12,11 +12,13 @@ public:
     void TryConnect(QString host, quint16 port);
 
 private:
-    QSslSocket* socket;
+    QTcpSocket* socket;
 
 private slots:
-    void onEncrypted();
-    void onSslErrors(const QList<QSslError> &errors);
+    void onConnected();
+    void onReadyRead();
+    void onError(QAbstractSocket::SocketError error);
+
 };
 
 #endif // CLIENTCONNECTION_H

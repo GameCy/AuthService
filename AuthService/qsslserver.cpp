@@ -142,7 +142,38 @@ bool QSslServer::importPkcs12(const QString &path, const QByteArray &passPhrase,
 		}
 	}
 
-	return ret;
+    return ret;
+}
+
+bool QSslServer::importPem(const QString keyPath, const QString certPath)
+{
+    quint16 success=0;
+    QFile keyFile(keyPath);
+    if(keyFile.open(QIODevice::ReadOnly))
+    {
+        QSslKey key(&keyFile, QSsl::Rsa);
+        keyFile.close();
+
+        if(!key.isNull())
+        {
+            _configuration.setPrivateKey(key);
+            success++;
+        }
+    }
+
+    QFile certFile(certPath);
+    if(certFile.open(QIODevice::ReadOnly))
+    {
+        QSslCertificate cert(&certFile);
+        certFile.close();
+
+        if(!cert.isNull())
+        {
+            _configuration.setLocalCertificate(cert);
+            success++;
+        }
+    }
+    return (success==2); // both loaded
 }
 
 QList<QSslCipher> QSslServer::ciphers() const

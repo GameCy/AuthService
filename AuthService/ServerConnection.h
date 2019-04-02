@@ -7,15 +7,13 @@ class ServerConnection : public QObject
 {
     Q_OBJECT
 public:
-    ServerConnection(QSslSocket* sock);
+    ServerConnection(QTcpSocket* sock);
 
 private slots:
-    void onEncrypted();
-    void onSslErrors(const QList<QSslError> &errors);
     void onSocketError(QAbstractSocket::SocketError socketError);
 
 private:
-    QSslSocket* socket;
+    QTcpSocket* socket;
 };
 
 #endif // SERVERCONNECTION_H

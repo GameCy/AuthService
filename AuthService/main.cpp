@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <ServerConnection.h>
+#include <Listener.h>
 
 void testProtoSerialization()
 {
@@ -33,14 +34,9 @@ void testProtoSerialization()
     free(buffer);
 }
 
-int main(int argc, char *argv[])
+bool StartListeningSsl(QObject* parent)
 {
-    QCoreApplication app(argc, argv);
-
-    //testProtoSerialization();
-
-
-    auto server = new QSslServer(&app);
+    auto server = new QSslServer(parent);
     //emits newConnection just like the tcp variant
     QObject::connect( server, &QSslServer::newConnection
              , [server]()
@@ -56,14 +52,31 @@ int main(int argc, char *argv[])
     } );
 
     //load a certificate and private key, then start listening
-    QString certificatePath = QStringLiteral("certs/server.p12");
-    if(!server->importPkcs12(certificatePath))
+    QString keyPath = QStringLiteral("certs/key.key");
+    QString certPath = QStringLiteral("certs/key.pem");
+    if(!server->importPem(keyPath, certPath))
+    {
         qCritical() << "Failed to import certificates";
+        return false;
+    }
     else
     {
         qDebug() << "Listening for incomming connections.";
         server->listen(QHostAddress::Any, 4749);
+        return true;
     }
+}
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication app(argc, argv);
+
+    //testProtoSerialization();
+    //StartListeningSsl(&app);
+
+    Listener server;
+    server.listen(QHostAddress::Any, 4749);
+    qDebug() << "Listening for incomming connections.";
 
     return app.exec();
 }

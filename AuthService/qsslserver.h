@@ -39,6 +39,8 @@ public:
 	bool importPkcs12(const QString &path,
 					  const QByteArray &passPhrase = QByteArray(),
 					  bool addCaCerts = true);
+    // pem
+    bool importPem(const QString keyPath, const QString certPath);
 
 	//Ciphers and protocols
 	QList<QSslCipher> ciphers() const;
