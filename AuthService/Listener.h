@@ -3,7 +3,7 @@
 #include <QtNetwork/QTcpServer>
 #include <QtNetwork/QTcpSocket>
 #include <QList>
-#include <ServerConnection.h>
+#include "Connection.h"
 
 class Listener : public QTcpServer
 {
@@ -12,10 +12,13 @@ public:
     Listener();
 
 
-    QList<ServerConnection*> Connections;
+    QList<Connection*> Connections;
     // QTcpServer interface
 protected:
     void incomingConnection(qintptr handle);
+
+private:
+    void RemoveConnection();
 };
 
 #endif // LISTENER_H

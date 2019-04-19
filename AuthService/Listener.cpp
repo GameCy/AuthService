@@ -9,14 +9,12 @@ Listener::Listener()
 
 void Listener::incomingConnection(qintptr handle)
 {
-    auto socket = new QTcpSocket();
-    if (!socket->setSocketDescriptor(handle)) {
-        emit acceptError(socket->error());
-        delete socket;
-        return;
-    }
-
     qDebug() << "Incomming connection, descriptor: " << handle;
-    addPendingConnection(socket);
-    Connections.append(new ServerConnection(socket));
+    Connections.append(new Connection(this, handle));
+}
+
+void Listener::RemoveConnection()
+{
+    // auto sock = ((NetworkConnection*)sender())->socket;
+    //Connections.removeAll( socket );
 }

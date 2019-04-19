@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 
-SUBDIRS = AuthService Client
+SUBDIRS = AuthService Client \
+    Draft
 

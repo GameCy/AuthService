@@ -1,0 +1,4 @@
+
+NewUser : CreateUser : CommonResponse
+Login : Authorize : CommonResponse
+

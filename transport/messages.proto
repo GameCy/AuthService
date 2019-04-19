@@ -1,17 +1,6 @@
 syntax = "proto3";
 option optimize_for = LITE_RUNTIME;
 
-enum PacketType {
-    CreateUser = 0;
-
-}
-
-message PacketHeader {
-    sfixed32 size = 1;
-    sfixed32 requestId = 2;
-    sfixed32 packetType = 2;
-}
-
 message CreateUser {
     string user = 1;
     string pass = 2;
@@ -19,36 +8,19 @@ message CreateUser {
     string email = 4;
 }
 
-message CreateUserResponse {
+message Authenticate {
+    string user = 1;
+    string pass = 2;
+}
+
+message CommonResponse {
     enum Result {
-        Created = 0;
-        AlreadyExists = 1;
-        Failed = 2;
+        Failed = 0;
+        Success = 1;
+        Error = 2;
     }
     Result result = 1;
-    // auth token?
-
+    string info = 2;
 }
 
-message Person {
-  int32 id = 1;
-  string name = 2;
-  string email = 3;
 
-  enum PhoneType {
-    MOBILE = 0;
-    HOME = 1;
-    WORK = 2;
-  }
-
-  message PhoneNumber {
-    string number = 1;
-    PhoneType type = 2;
-  }
-
-  repeated PhoneNumber phones = 4;
-}
-
-message AddressBook {
-  repeated Person people = 1;
-}

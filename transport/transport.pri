@@ -1,8 +1,16 @@
 include(QtProtobufLite.pri)
 
 SOURCES += \
-        $$PWD/messages.pb.cc
+        $$PWD/MessageFactory.cpp \
+        $$PWD/messages.pb.cc \
+        $$PWD/Connection.cpp
 
 HEADERS += \
-        $$PWD/messages.pb.h
+        $$PWD/MessageFactory.h \
+        $$PWD/messages.pb.h \
+        $$PWD/Connection.h
+
+DISTFILES += \
+    $$PWD/Routes.csv \
+    $$PWD/messages.proto
 

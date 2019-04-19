@@ -16,12 +16,10 @@ INCLUDEPATH += $$PWD/../transport
 SOURCES += \
         main.cpp \
     qsslserver.cpp \
-    ServerConnection.cpp \
     Listener.cpp
 
 HEADERS += \
     qsslserver.h \
-    ServerConnection.h \
     Listener.h
 
 # Default rules for deployment.

@@ -3,32 +3,32 @@
 #include "qsslserver.h"
 #include <QObject>
 #include <QDebug>
-#include <ServerConnection.h>
-#include <Listener.h>
+#include "Connection.h"
+#include "Listener.h"
 
 void testProtoSerialization()
 {
     qDebug() << "fill personOut fields";
-    Person personOut;
-    personOut.set_id(123456);
-    personOut.set_name("Soleas");
-    personOut.set_email("Sole@s.com");
+    CreateUser msgOut;
+    msgOut.set_user("123456");
+    msgOut.set_pass("Soleas");
+    msgOut.set_email("Sole@s.com");
 
     qDebug() << "serialize personOut to buffer";
-    size_t size = personOut.ByteSizeLong();
+    size_t size = msgOut.ByteSizeLong();
     void *buffer = malloc(size);
-    personOut.SerializeToArray(buffer, size);
+    msgOut.SerializeToArray(buffer, size);
 
     qDebug() <<"buffer size in bytes:" << size;
 
     qDebug() << "deserialize from buffer to personIn";
-    Person personIn;
-    personIn.ParseFromArray(buffer, size);
+    CreateUser msgIn;
+    msgIn.ParseFromArray(buffer, size);
 
     qDebug() << "assert personOut matches personIn";
-    assert(personIn.name()==personOut.name());
-    assert(personIn.email()==personOut.email());
-    assert(personIn.id()==personOut.id());
+    assert(msgIn.user()==msgOut.user());
+    assert(msgIn.email()==msgOut.email());
+    assert(msgIn.pass()==msgOut.pass());
 
     qDebug() << "completed test";
     free(buffer);
@@ -44,8 +44,8 @@ bool StartListeningSsl(QObject* parent)
         while(server->hasPendingConnections())
         {
             auto socket = server->nextPendingConnection();
-            auto connection = new ServerConnection(socket);
-            socket->startServerEncryption();
+            auto connection = new Connection(socket);
+            //socket->startServerEncryption();
             //work with the new socket
             qDebug() << "new connection";
         }
